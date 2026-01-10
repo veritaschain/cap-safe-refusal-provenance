@@ -1,3 +1,20 @@
+## Reading Guidance (Non-normative)
+
+This document provides a consolidated prior-art and landscape assessment for the **CAP-SRP (Safe Refusal Provenance)** framework.
+
+The primary purpose of this report is to evaluate the **novelty, scope, and defensibility** of CAP-SRP as an open specification for cryptographically verifiable AI refusal and non-generation evidence. It is intended for regulators, standards bodies, auditors, and technical stakeholders assessing post-incident accountability mechanisms for AI systems.
+
+- **Sections 1–5** focus on research methodology, architectural comparison, and differentiation from existing standards and implementations.  
+- **Sections 6–8** examine related academic work, provider practices, and standards gaps relevant to AI content moderation and refusal logging.  
+- **Section 9** summarizes the consolidated conclusions and recommended positioning based on multi-source analysis.  
+
+Supporting **contextual empirical evidence**, including publicly reported safeguard bypass rates across major AI systems, is provided separately in **Appendix C**.  
+This material is included to illustrate broader industry conditions and does **not** constitute claims regarding legal compliance or real-world behavior of any specific provider.
+
+Readers primarily interested in empirical context may proceed directly to **Appendix C**, while readers focused on standards positioning and prior-art assessment are encouraged to review the main sections before consulting the appendices.
+
+---
+
 # CAP-SRP World-First Evidence Report
 
 **Consolidated Prior Art Assessment for Safe Refusal Provenance**

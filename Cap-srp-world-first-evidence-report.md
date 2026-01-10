@@ -330,3 +330,79 @@ To ensure claim accuracy:
 Contact: standards@veritaschain.org  
 Website: https://veritaschain.org  
 GitHub: https://github.com/veritaschain
+
+---
+
+## Appendix C: Contextual Evidence — Safeguard Bypass Rates in Major AI Systems (Public Research)
+
+> **Purpose (Non-normative):**  
+> This appendix provides contextual background on broader industry risks highlighted by the Grok incident.  
+> It does **not** constitute a claim that any specific provider is non-compliant with law or policy, nor does it imply that a given bypass rate directly translates to real-world harmful content generation.  
+>  
+> The core purpose is to document that **high safeguard bypass success rates have been reported in public research across multiple leading AI systems**, reinforcing that trust-based explanations remain structurally fragile without independently verifiable audit evidence.
+
+---
+
+### C.1 Summary of Selected Public Findings (Narrative Form)
+
+The following observations summarize **publicly reported research findings**.  
+All figures are **methodology- and dataset-dependent** and are included for contextual risk assessment only.
+
+**ChatGPT / GPT-class LLMs (Text Generation)**  
+- Reported metric: *“Jailbreak success rate”* across various adversarial prompting methods  
+- Reported range: **79–95%**  
+- Notes:  
+  - Observed across multiple jailbreak paradigms (translation-based attacks, multi-step prompting, iterative refinement).  
+  - Results vary by model version, evaluation dataset, and definition of “successful bypass”.
+
+**Gemini-class LLMs (Text Generation)**  
+- Reported metric: *“Safeguard bypass / harmful output compliance failure”*  
+- Reported rate: **~83%**  
+- Notes:  
+  - Reported in studies evaluating failure to block unsafe or misleading outputs under specific prompt sets.  
+  - Outcomes depend on task framing (e.g., medical misinformation, contextual role-play).
+
+**Midjourney-class Image Generation Systems**  
+- Reported metric: *“Safety filter bypass”* (e.g., surrogate prompt techniques)  
+- Reported rate: **~88%**  
+- Notes:  
+  - Reported in research demonstrating indirect prompt techniques that evade policy filters.  
+  - Results depend on prompt chaining and image-to-image guidance strategies.
+
+---
+
+### C.2 Representative Public Research References (Non-Exhaustive)
+
+The following references are provided as **illustrative examples** of publicly available research reporting high safeguard bypass rates:
+
+- ChatGPT / GPT-class models:  
+  - https://arxiv.org/abs/2310.02446  
+  - https://arxiv.org/abs/2312.14302  
+
+- Gemini-class models:  
+  - https://www.bmj.com/content/384/bmj-2023-078538  
+  - Public mirror: https://pmc.ncbi.nlm.nih.gov/articles/PMC10961718/  
+
+- Image-generation systems (surrogate prompt / filter bypass):  
+  - https://arxiv.org/abs/2309.14122  
+  - https://arxiv.org/abs/2410.03869  
+
+These references do **not** assert universal bypass behavior; they document that **high bypass success rates can be observed under controlled research conditions**.
+
+---
+
+### C.3 Relevance to CAP-SRP (Informative)
+
+Public research indicates that safeguard mechanisms across multiple AI systems can be bypassed under adversarial conditions.  
+When incidents occur, regulators and auditors are often left with **provider-controlled explanations** and incomplete visibility into refusal behavior.
+
+CAP-SRP does **not** attempt to prevent bypasses or define content policy.  
+Instead, it provides a standardized, cryptographically verifiable method to record **generation attempts and refusal outcomes**, enabling independent post-incident verification for recorded events.
+
+---
+
+### C.4 Scope and Limitations
+
+CAP-SRP provides verifiable evidence for **logged** refusal and non-generation decisions, as well as completeness guarantees for **recorded** events.  
+It does **not** claim to prove the absolute absence of unlogged generation.  
+Stronger guarantees may require additional mechanisms (e.g., attestation, TEEs, or multi-party monitoring), which are outside the scope of this report.

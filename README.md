@@ -277,6 +277,8 @@ SRP is verification-based: "We have filters. Here's the cryptographic proof they
 ```
 cap-srp-poc/
 ├── README.md                 # This file
+├── Cap-srp-world-first-evidence-report.md  # Prior art assessment
+├── SECURITY.md               # Security policy
 ├── spec/
 │   └── CAP-SRP-Extension.md  # Formal specification
 ├── src/

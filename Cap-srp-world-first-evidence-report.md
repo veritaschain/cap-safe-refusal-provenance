@@ -9,7 +9,7 @@
 **Date:** 2026-01-10  
 **Classification:** Public  
 **Prepared by:** VeritasChain Standards Organization (VSO)  
-**Research Sources:** 5 independent AI engines (Claude, GPT, Gemini, PPLX, GROK)  
+**Research Sources:** 5 independent AI research engines  
 **Total Sources Analyzed:** 250+ academic, industry, patent, and regulatory sources
 
 ---
@@ -20,7 +20,7 @@
 
 All five independent AI research engines confirm CAP-SRP's "world's first" claims are defensible when appropriately qualified. While parallel projects (ArifOS, CIRIS, SPQR) emerged in late 2025, CAP-SRP is unique as an **open specification** for AI content moderation with **completeness verification** and **evidence pack export**. 
 
-**Key Finding:** "No competing implementation achieves similar functionality." (GROK Research)
+**Key Finding:** "No competing implementation achieves similar functionality." (Research)
 
 ### Claim Assessment Summary
 
@@ -40,11 +40,11 @@ All five independent AI research engines confirm CAP-SRP's "world's first" claim
 
 | Source | Scope | Key Finding |
 |--------|-------|-------------|
-| **Claude** | 160+ sources, patents, standards | No direct prior art; FTO confirmed |
-| **GPT** | Open-source, startup ecosystem | Parallel projects: ArifOS, CIRIS, SPQR |
-| **Gemini** | Technical architecture, legal | AuditableLLM academic precedent |
-| **PPLX** | 116+ citations, academic/industry | Core innovation appears novel |
-| **GROK** | Feature comparison, alternatives | No competing implementations identified |
+| **Engine A** | 160+ sources, patents, standards | No direct prior art; FTO confirmed |
+| **Engine B** | Open-source, startup ecosystem | Parallel projects: ArifOS, CIRIS, SPQR |
+| **Engine C** | Technical architecture, legal | AuditableLLM academic precedent |
+| **Engine D** | 116+ citations, academic/industry | Core innovation appears novel |
+| **Engine E** | Feature comparison, alternatives | No competing implementations identified |
 
 ### 1.2 Coverage Domains
 
@@ -57,7 +57,7 @@ All five independent AI research engines confirm CAP-SRP's "world's first" claim
 
 ---
 
-## 2. Closest Alternatives Analysis (GROK Research)
+## 2. Closest Alternatives Analysis (Research)
 
 GROK's research performed the most detailed feature-by-feature comparison against closest alternatives.
 
@@ -79,7 +79,7 @@ GROK's research performed the most detailed feature-by-feature comparison agains
 
 ---
 
-## 3. Parallel Projects Discovery (GPT Research)
+## 3. Parallel Projects Discovery (Research)
 
 GPT research identified three projects with partial overlap, all emerging in late 2025. These represent **concurrent independent innovation** rather than prior art.
 
@@ -128,7 +128,7 @@ GPT research identified three projects with partial overlap, all emerging in lat
 
 ---
 
-## 4. Academic Prior Art Analysis (Gemini & PPLX)
+## 4. Academic Prior Art Analysis (Research)
 
 ### 4.1 AuditableLLM (Li et al., 2026) - Closest Academic Precedent
 
@@ -201,7 +201,7 @@ This "Proof Gap" is exactly what CAP-SRP addresses.
 
 ---
 
-## 7. Patent Landscape & Freedom to Operate (Claude)
+## 7. Patent Landscape & Freedom to Operate (Research)
 
 Patent database searches (USPTO, EPO, WIPO: 2020-2026) identified no patents covering CAP-SRP's specific feature combination.
 
@@ -300,18 +300,18 @@ To ensure claim accuracy:
 
 ## Appendix B: Key Citations (from 5 Research Sources)
 
-1. Li et al. (2026). "AuditableLLM: A Hash-Chain-Backed, Compliance-Aware Auditable Framework." MDPI Electronics 15(1). [Gemini]
-2. ArifOS PyPI Package: https://pypi.org/project/arifos/ [GPT]
-3. CIRIS Framework: https://github.com/CIRISAI [GPT]
-4. SPQR: https://spqrtech.ai/ [GPT]
+1. Li et al. (2026). "AuditableLLM: A Hash-Chain-Backed, Compliance-Aware Auditable Framework." MDPI Electronics 15(1). [Engine C]
+2. ArifOS PyPI Package: https://pypi.org/project/arifos/ [Engine B]
+3. CIRIS Framework: https://github.com/CIRISAI [Engine B]
+4. SPQR: https://spqrtech.ai/ [Engine B]
 5. C2PA Specification v2.3: https://spec.c2pa.org/ [All sources]
-6. Constant-Size Cryptographic Evidence Structures (arXiv 2025): https://arxiv.org/html/2511.17118v1 [PPLX]
-7. DeepMind Verifiable Data Audit (2017): https://deepmind.google/blog/trust-confidence-and-verifiable-data-audit/ [PPLX, GROK]
-8. Framework for Cryptographic Verifiability of AI Pipelines (ACM): https://dl.acm.org/doi/10.1145/3716815.3729011 [PPLX]
+6. Constant-Size Cryptographic Evidence Structures (arXiv 2025): https://arxiv.org/html/2511.17118v1 [Engine D]
+7. DeepMind Verifiable Data Audit (2017): https://deepmind.google/blog/trust-confidence-and-verifiable-data-audit/ [Research]
+8. Framework for Cryptographic Verifiability of AI Pipelines (ACM): https://dl.acm.org/doi/10.1145/3716815.3729011 [Engine D]
 9. EU AI Act Article 12 (Logging Requirements) [All sources]
-10. ISO/IEC DIS 24970 - AI System Logging (Draft) [Claude]
-11. NIST AI RMF Generative AI Profile (NIST.AI.600-1, 2024) [PPLX, GROK]
-12. USPTO/EPO/WIPO Patent Search 2020-2026 [Claude]
+10. ISO/IEC DIS 24970 - AI System Logging (Draft) [Engine A]
+11. NIST AI RMF Generative AI Profile (NIST.AI.600-1, 2024) [Research]
+12. USPTO/EPO/WIPO Patent Search 2020-2026 [Engine A]
 
 ---
 

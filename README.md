@@ -7,6 +7,12 @@
 [![VAP Compatible](https://img.shields.io/badge/VAP-v1.1-green.svg)](https://veritaschain.org)
 
 ---
+## Related Specifications
+
+- **CAP Specification (Canonical Reference)**  
+  The formal specification for CAP (Content / Creative AI Profile), defining the normative data model, event taxonomy, and cryptographic requirements.  
+  👉 https://github.com/veritaschain/cap-spec
+---
 
 ## PoC Definition
 

@@ -1,327 +1,151 @@
 # CAP-SRP: Safe Refusal Provenance PoC
 
-**Proving that harmful AI generations *never happened* — with cryptographic evidence.**
+**Tamper-evident evidence of recorded generation attempts and reported refusals.**
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![VAP Compatible](https://img.shields.io/badge/VAP-v1.1-green.svg)](https://veritaschain.org)
 
----
-## Related Specifications
+This first-party, legacy PoC illustrates request/outcome logging and Evidence Pack export. The examples simulate decisions; they do not run or validate a model's safety filters. No generated images or real personal data are needed.
 
-- **CAP Specification (Canonical Reference)**  
-  The formal specification for CAP (Content / Creative AI Profile), defining the normative data model, event taxonomy, and cryptographic requirements.  
-  👉 https://github.com/veritaschain/cap-spec
----
+## Canonical specifications and status
 
-## PoC Definition
+**CAP means Content / Creative AI Profile**, a domain profile of the **Verifiable AI Provenance Framework (VAP)**. SRP means **Safe Refusal Provenance**.
 
-> **This PoC produces a verifiable evidence pack proving that a generation request was received AND refused.**
->
-> **It does NOT contain unsafe prompts or generated NSFW outputs.**
->
-> **Any third party can verify integrity and completeness using hash-chain + Ed25519 signatures (+ optional Merkle anchor).**
+- [CAP v1.0 — released specification](https://github.com/veritaschain/cap-spec/blob/main/docs/CAP-Specification-v1.0.md)
+- [VAP v1.2 — framework specification](https://github.com/veritaschain/vap-spec/blob/main/spec/v1.2/VAP_Framework_Specification.md) (currently Draft 3)
+- [CAP v1.0 / VAP v1.2 Draft 3 conformance mapping](https://github.com/veritaschain/cap-spec/blob/main/docs/conformance/CAP-v1.0-VAP-v1.2-Draft3-Conformance-Mapping.md) — **review draft**
+- [Minimal change proposal](https://github.com/veritaschain/cap-spec/blob/main/docs/conformance/CAP-VAP-v1.2-Minimal-Change-Proposal.md) — **unadopted**
 
----
+**Status checked 2026-10-08 JST:** the mapping is published for review, but identifies unresolved normative divergences. **CAP v1.0 conformance to VAP v1.2 has not been established.** Neither publication of the mapping nor this PoC establishes conformance or certification. CAP v1.0 remains the released CAP specification; the proposal does not amend it. This repository demonstrates selected SRP mechanisms and does not claim full CAP v1.0 or VAP v1.2 conformance.
 
-## The Problem: Grok's "Black Hole" of Non-Generation
+In particular, CAP v1.0 permits optional external anchoring at Bronze, whereas VAP v1.2 INT-006 requires it at every conformance level. Signed batch scope, continuity, policy binding and data-model requirements also remain unresolved. A local hash chain, Merkle root or passing PoC test is not a substitute for those requirements.
 
-In December 2025–January 2026, xAI's Grok generated **6,700+ non-consensual sexual images per hour**, including images of minors. Regulators worldwide launched investigations.
+This is a **first-party PoC**, not independent implementation evidence. The [canonical CAP implementation disclosure](https://github.com/veritaschain/cap-spec#implementation-status-mandatory-disclosure) reports zero external implementations and zero Evidence Packs accepted in proceedings as of September 2026.
 
-But here's the deeper problem that no one talks about:
+## What the current implementation can and cannot verify
 
-| Current AI Systems | With SRP |
-|-------------------|----------|
-| Generated content → Logged | Generated content → Logged |
-| **Refused content → No record** | **Refused content → Cryptographically proven** |
+| Capability | Current implementation | Boundary |
+| --- | --- | --- |
+| Request/refusal records | `GEN_ATTEMPT` and `GEN_DENY`, linked by attempt ID; `GEN` for reported generation | Evidence of the producer's recorded statements, not proof of actual model behavior |
+| Hash-chain check | `verify_chain_integrity()` recomputes event hashes and checks links | Local self-consistency; a rewritten unanchored chain can be internally consistent |
+| Ed25519 signing | PyNaCl signs events when installed | Without PyNaCl signatures are disabled; the chain check does not verify signatures or authenticate the producer |
+| Outcome coverage | `verify_completeness()` compares sets of attempt IDs and outcome references | **Does not count duplicate outcomes**; a PASS does not prove exactly one terminal outcome per attempt |
+| Evidence Pack export | Events, chain, statistics and verification notes | No independent validation or automatic regulatory acceptance |
+| External anchoring | Export is marked `NOT_ANCHORED` | No authenticated external timestamp or VAP AnchorRecord verification |
+| Standalone pack verification | `--verify` is a placeholder | It prints “Standalone verification not yet implemented”; do not use it as a successful verification command |
 
-When regulators ask "Prove your safeguards worked," current systems cannot answer. The refusals simply vanish.
+The file named `verification/merkle_root.json` contains a **SHA-256 digest of concatenated event-hash strings**, not an RFC 6962 Merkle tree or inclusion proofs. The filename is retained for compatibility. No signing public key is exported in the pack, so independent signature verification requires separately obtained, authenticated key material and a separate verifier.
 
-**SRP fixes this by recording every refusal as a verifiable, tamper-evident event.**
+## Completeness Invariant: scope and limits
 
----
+The canonical CAP relationship is:
 
-## What This PoC Demonstrates
+```text
+COUNT(GEN_ATTEMPT) = COUNT(GEN) + COUNT(GEN_DENY) + COUNT(GEN_ERROR)
+```
 
-### ✅ What It Proves
+For a closed set of recorded attempts, outcomes must be linked by attempt ID and checked for missing, orphan and duplicate outcomes. **Equal aggregate counts alone are insufficient.** Attempts still in progress, or outcomes crossing a time-window boundary, must be distinguished from missing terminal outcomes; a failed check does not by itself prove fraud.
 
-1. **Generation attempts are recorded** (`GEN_ATTEMPT` event)
-2. **Refusals are cryptographically logged** (`GEN_DENY` event)
-3. **The chain is tamper-evident** (hash linking + signatures)
-4. **Completeness is verifiable** (every ATTEMPT has a corresponding outcome)
-5. **Third parties can audit** (Evidence Pack with verification instructions)
+**Independent completeness claims cover recorded and externally anchored requests, at anchor/batch granularity.** Hashes, signatures, full batch scope and independently authenticated commitments must be verified separately. A Merkle inclusion proof shows membership of one event, not completeness of the entire batch.
 
-### ❌ What It Does NOT Include
+What these mechanisms cannot establish:
 
-- Actual unsafe prompts (only hashes)
-- Generated NSFW images
-- Real personal data
-- Production-grade key management
+- **Pre-measurement drops:** a request never recorded as `GEN_ATTEMPT` leaves nothing to detect.
+- **Uncommitted omissions:** removing an attempt and its outcome together can preserve the count equation. Local self-consistency does not establish a complete history without an independent commitment.
+- **Truth of the underlying decision:** signed records attribute a statement to a key; they do not establish that the producer accurately described model execution or used adequate safeguards.
+- **Universal non-generation or safety:** a recorded `GEN_DENY` does not prove that harmful content never existed or was never generated elsewhere. SRP records decisions after the fact; it does not itself block, filter or prevent generation.
 
-**Zero controversy risk by design.**
+These limits follow the canonical CAP README and VAP v1.2 §§1.6, 4.1.7 and 11.1. See the mapping for the distinction between SRP attempt/outcome checks and VAP anchored-batch completeness.
 
----
+### Legacy implementation differences
+
+The canonical CAP invariant includes `GEN_ERROR`. This legacy PoC has no `GEN_ERROR` event implementation and treats `GEN_WARN`, `GEN_ESCALATE` and `GEN_QUARANTINE` as outcomes in its set-based coverage check. Those intermediate decisions must not be assumed equivalent to canonical terminal outcomes. The current demo constructs `GEN` and `GEN_DENY` records only.
+
+The local event model uses fields such as `eventType`, `attemptId` and `previousHash`. It is not a VAP v1.2 envelope. Documentation alignment does not change event serialization, historical signatures or released CAP requirements.
 
 ## Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/veritaschain/cap-srp-poc.git
-cd cap-srp-poc
+git clone https://github.com/veritaschain/cap-safe-refusal-provenance.git
+cd cap-safe-refusal-provenance
 
-# Install dependencies (optional: PyNaCl for signatures)
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# Run the demo
+# Synthetic request/outcome scenarios and Evidence Pack export
 python examples/demo_scenarios.py
 
-# Run tests
+# Existing implementation tests
 python tests/test_srp.py
 ```
 
----
+Installing `requirements.txt` enables PyNaCl signing. Running without it is hash-chain-only behavior, not signature verification. Neither the demo nor test success establishes CAP/VAP conformance.
 
-## Event Model: ATTEMPT → OUTCOME
+### Local checks through the Python API
 
-The key insight for audit defensibility: **every generation attempt MUST have a recorded outcome**.
+```python
+from src.srp_core import SRPLogger, RiskCategory
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     SRP Event Flow                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  User Request                                                   │
-│      │                                                          │
-│      ▼                                                          │
-│  ┌───────────────────┐                                         │
-│  │   GEN_ATTEMPT     │  ← Always recorded first                │
-│  │   (promptHash,    │                                         │
-│  │    policyId,      │                                         │
-│  │    modelVersion)  │                                         │
-│  └─────────┬─────────┘                                         │
-│            │                                                    │
-│            ▼                                                    │
-│  ┌───────────────────┐                                         │
-│  │  Risk Assessment  │                                         │
-│  └─────────┬─────────┘                                         │
-│            │                                                    │
-│            ├──────────────────┐                                │
-│            │                  │                                 │
-│            ▼                  ▼                                 │
-│     Risk < Threshold    Risk >= Threshold                      │
-│            │                  │                                 │
-│            ▼                  ▼                                 │
-│       ┌────────┐        ┌─────────┐                           │
-│       │  GEN   │        │ GEN_DENY│                           │
-│       │(output)│        │(refusal)│                           │
-│       └────────┘        └─────────┘                           │
-│                                                                 │
-│  Audit invariant: Every GEN_ATTEMPT has exactly one            │
-│                   GEN or GEN_DENY following it.                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+logger = SRPLogger(model_version="demo-model", policy_id="cap.example.safe-refusal.v1")
+logger.log_refusal(
+    prompt="synthetic test request",
+    risk_category=RiskCategory.OTHER,
+    risk_score=0.9,
+    refusal_reason="Synthetic policy decision for demonstration",
+)
+print(logger.verify_chain_integrity())  # Hashes and links only
+print(logger.verify_completeness())    # Set-based outcome coverage only
 ```
 
-This prevents the attack vector: "You only showed us DENYs—where are the ALLOWs you're hiding?"
+## Evidence Pack
 
----
+The demo writes packs under `output/evidence-pack-<chain_id>/`:
 
-## Core Events
+| Path | Content |
+| --- | --- |
+| `manifest.json` | Producer-generated metadata and local check results |
+| `events/` | Individual serialized records |
+| `chain/hash_chain.json` | Supplied event sequence |
+| `statistics/refusal_stats.json` | Counts and categories derived from that sequence |
+| `verification/merkle_root.json` | Legacy aggregate digest, explicitly unanchored |
+| `verification/instructions.md` | Limited local checks and verification caveats |
 
-### 1. GEN_ATTEMPT (Generation Request Received)
+For independent assessment, recompute hashes, check links, verify signatures against authenticated keys, check outcome multiplicity and terminality, and compare complete declared scope against authenticated external commitments. **The PoC does not automate that complete workflow.** Manifest labels and statistics are not independently verified evidence by themselves.
 
-```json
-{
-  "eventType": "GEN_ATTEMPT",
-  "eventId": "019467a1-2b3c-7def-8901-234567890abc",
-  "timestamp": "2026-01-10T14:23:45.678Z",
-  "promptHash": "sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069",
-  "inputType": "image+text",
-  "policyId": "cap.example.safe-refusal.v1",
-  "modelVersion": "img-gen-v4.2.1",
-  "sessionId": "sess-abc123",
-  "previousHash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-}
-```
+## Prompt privacy
 
-### 2. GEN_DENY (Refusal Decision)
+Event prompt fields contain hashes rather than plaintext prompts. Hashes can still be linkable or susceptible to guessing; they do not automatically anonymize personal data or establish GDPR Article 17 compliance. Free-text reasons and other metadata also require privacy review.
 
-```json
-{
-  "eventType": "GEN_DENY",
-  "eventId": "019467a1-2b3c-7def-8901-234567890abd",
-  "timestamp": "2026-01-10T14:23:45.712Z",
-  "attemptId": "019467a1-2b3c-7def-8901-234567890abc",
-  "riskCategory": "CSAM_RISK",
-  "riskScore": 0.97,
-  "refusalReason": "Minor detected in reference image",
-  "modelDecision": "DENY",
-  "previousHash": "sha256:...",
-  "eventHash": "sha256:...",
-  "signature": "ed25519:..."
-}
-```
+## Regulatory relevance and legal scope
 
----
+Refusal records may support assessment of logging, oversight and audit obligations, including EU AI Act Article 12 where applicable. They do not establish fulfillment of those obligations, content-removal duties, retention periods or GDPR erasure requirements. A timestamp is not a retention system, and hashing a prompt does not automatically anonymize personal data.
 
-## Risk Categories
+> **Legal scope (VAP v1.2 §1.6).** VAP and its domain profiles define mechanisms for producing **cryptographically verifiable evidence** of AI system decisions. Conformance to VAP or any profile: (a) does **not** constitute compliance with the EU AI Act, GDPR, MiFID II/III, CAT Rule 613, NIS2, FDA SaMD guidance, or any other law or regulation; (b) does **not** constitute a legal determination that any technical mechanism (including crypto-shredding) satisfies a specific legal obligation; (c) does **not** warrant the correctness, fairness, or safety of the underlying AI decisions — only the integrity, completeness (at anchor granularity), and attributability of their records. VAP generates evidence; competent authorities and courts evaluate it.
 
-| Category | Description | Legal Reference |
-|----------|-------------|-----------------|
-| `CSAM_RISK` | Child sexual abuse material risk | 18 U.S.C. §2256 |
-| `NCII_RISK` | Non-consensual intimate imagery | TAKE IT DOWN Act (2025) |
-| `MINOR_SEXUALIZATION` | Sexualization of minors | EU DSA Article 35 |
-| `REAL_PERSON_DEEPFAKE` | Non-consensual deepfake | EU AI Act Article 52 |
-| `VIOLENCE_EXTREME` | Extreme violence/gore | Criminal codes |
-| `HATE_CONTENT` | Hate speech/discrimination | DSA, national laws |
+External anchoring is omitted in this PoC. This is an implementation limitation, not an exception to VAP v1.2's all-level anchoring requirement. Refusal records do not prove that removal or transparency obligations no longer apply.
 
----
+## Historical documents and current references
 
-## Evidence Pack Structure
+- [CAP v1.0 canonical specification](https://github.com/veritaschain/cap-spec/blob/main/docs/CAP-Specification-v1.0.md) and [VAP v1.2 framework](https://github.com/veritaschain/vap-spec/blob/main/spec/v1.2/VAP_Framework_Specification.md) govern current reference terminology and scope.
+- [Local SRP extension v0.2](spec/CAP-SRP-Extension.md) and [local CAP v0.2](spec/CAP-Specification-v0_2.md) are historical drafts, not current canonical specifications. Their older versions, diagrams and requirements are retained as historical records.
+- [Prior-art report](Cap-srp-world-first-evidence-report.md) is historical research, not a current “world's first” claim, independent validation or proof of universal non-generation.
+- [CAP-SRP dashboard/library](https://github.com/veritaschain/cap-srp) is a separate PoC with `GEN_ERROR` and additional checks; it also does not claim VAP v1.2 conformance.
 
-The PoC outputs a complete evidence package for regulatory submission:
+## Repository guide
 
-```
-evidence-pack-{chain_id}/
-├── manifest.json           # Pack metadata, integrity status
-├── events/
-│   ├── 0001-gen_attempt.json
-│   ├── 0002-gen_deny.json
-│   └── ...
-├── chain/
-│   └── hash_chain.json     # Complete event chain
-├── statistics/
-│   └── refusal_stats.json  # ← MOST REVIEWED BY AUDITORS
-└── verification/
-    ├── merkle_root.json    # For external anchoring
-    └── instructions.md     # Third-party verification guide
-```
+- `src/srp_core.py`: legacy event logging, local checks and export
+- `examples/demo_scenarios.py`: synthetic scenario demonstration
+- `tests/test_srp.py`: implementation tests
+- `spec/`: historical drafts
+- [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md)
 
-**Note for auditors:** The `statistics/refusal_stats.json` file is typically the first document reviewed in compliance audits. It provides aggregated metrics on refusal rates, categories, and chain integrity status.
+## License and contact
 
----
+[CC BY 4.0 International](LICENSE). VeritasChain Standards Organization (VSO).
 
-## Third-Party Verification (2 minutes)
+- Website: https://veritaschain.org
+- Email: standards@veritaschain.org
+- GitHub: https://github.com/veritaschain/cap-safe-refusal-provenance
 
-Anyone can verify the evidence pack:
-
-1. **Recalculate each EventHash** from event data
-2. **Verify hash chain linkage** (each `previousHash` matches prior `eventHash`)
-3. **Verify signatures** (Ed25519 against public key)
-4. **Check completeness** (every `GEN_ATTEMPT` has a `GEN` or `GEN_DENY`)
-5. **Optional: Verify Merkle anchor** against external timestamp
-
-```bash
-# Automated verification
-python src/srp_core.py --verify evidence-pack-xxx/
-```
-
----
-
-## Regulatory Alignment
-
-| Regulation | Requirement | SRP Capability |
-|------------|-------------|----------------|
-| **EU AI Act Art. 12** | Automatic logging for high-risk AI | ✓ GEN_ATTEMPT + GEN_DENY events |
-| **EU DSA Art. 35** | Risk mitigation measures | ✓ Refusal statistics with proof |
-| **TAKE IT DOWN Act** | 48-hour removal proof | ✓ "Never generated" evidence |
-| **CSAM Prevention** | Child protection records | ✓ CSAM_RISK category tracking |
-
-### Compliance Note
-
-> **This PoC demonstrates cryptographic verifiability of refusal events.**
->
-> **External anchoring (blockchain/TSA) is optional in this PoC** — recommended for production deployments where long-term non-repudiation is required.
->
-> **The goal is audit defensibility, not legal advice or complete regulatory compliance.** Consult legal counsel for jurisdiction-specific requirements.
-
----
-
-## Implementation Notes
-
-### Event ID Format
-
-All event IDs use **UUID v7** (time-ordered) for:
-- Natural chronological ordering
-- Distributed generation without coordination
-- Timestamp extraction for audit trails
-
-### Policy ID Format
-
-Policy IDs in this PoC use reverse-domain notation:
-```
-cap.example.safe-refusal.v1
-cap.veritaschain.child-safety.v2.3
-```
-
-> **Note:** The format shown here is illustrative. Production implementations may use different conventions (e.g., `POL-CATEGORY-vX.Y`). The specification is intentionally flexible on this point.
-
-### Prompt Privacy
-
-**Original prompts are NEVER stored.** Only SHA-256 hashes are recorded, enabling:
-- Verification that a specific prompt was processed
-- Privacy protection (irreversible hash)
-- GDPR Article 17 compliance (no personal data in logs)
-
----
-
-## The Message
-
-> **We don't just block harmful generations.**
-> **We prove that they never happened.**
-
-Current AI safety is trust-based: "We have filters. Trust us."
-
-SRP is verification-based: "We have filters. Here's the cryptographic proof they worked."
-
-**Verify, Don't Trust.**
-
----
-
-## Repository Structure
-
-```
-cap-srp-poc/
-├── README.md                 # This file
-├── Cap-srp-world-first-evidence-report.md  # Prior art assessment
-├── SECURITY.md               # Security policy
-├── spec/
-│   └── CAP-SRP-Extension.md  # Formal specification
-├── src/
-│   ├── __init__.py
-│   └── srp_core.py           # Core implementation
-├── examples/
-│   └── demo_scenarios.py     # Grok-scenario demonstrations
-├── tests/
-│   └── test_srp.py           # Test suite (20+ tests)
-├── requirements.txt
-├── LICENSE                   # CC BY 4.0
-└── CONTRIBUTING.md
-```
-
----
-
-## License
-
-CC BY 4.0 International
-
----
-
-## Contact
-
-- **Website**: https://veritaschain.org
-- **Email**: standards@veritaschain.org
-- **GitHub**: https://github.com/veritaschain
-- **Specification**: [CAP-SRP Extension](spec/CAP-SRP-Extension.md)
-
----
-
-## Related Documents
-
-- [VAP Framework Specification v1.1](https://github.com/veritaschain/vap-spec)
-- [CAP Basic Specification v0.1](https://github.com/veritaschain/cap-spec)
-- [VCP Protocol Specification v1.1](https://github.com/veritaschain/vcp-spec)
-
----
-
-**© 2025-2026 VeritasChain Standards Organization. All rights reserved.**
+*Verify recorded decisions; do not infer unobserved behavior.*

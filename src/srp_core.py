@@ -2,14 +2,15 @@
 CAP-SRP: Safe Refusal Provenance - Core Module
 
 This module provides cryptographic logging and verification of AI content
-moderation decisions, specifically proving that harmful content was refused.
+moderation records, specifically reported attempts and refusal decisions.
+It does not prove actual non-generation or legal/CAP/VAP conformance.
 
 Key Features:
 - GEN_ATTEMPT: Records every generation request
 - GEN_DENY: Records refusals with risk assessment
 - Hash chain: Tamper-evident event linking
 - Ed25519 signatures: Non-repudiation
-- Completeness verification: Every attempt has an outcome
+- Outcome coverage: Set-based check only; duplicate outcomes are not counted
 
 Author: VeritasChain Standards Organization (VSO)
 License: CC BY 4.0 International
@@ -123,8 +124,8 @@ class GenDenyEvent:
     GEN_DENY Event: Records that a generation request was refused.
     
     This event MUST reference the corresponding GEN_ATTEMPT via attemptId.
-    It provides cryptographic proof that the request was received, evaluated,
-    and refused with a specific reason.
+    It records the producer's statement that the request was received,
+    evaluated and refused. It does not prove actual model behavior.
     """
     event_type: str = "GEN_DENY"
     event_id: str = ""
@@ -462,7 +463,8 @@ class SRPLogger:
     
     def verify_completeness(self) -> Dict[str, Any]:
         """
-        Verify that every GEN_ATTEMPT has exactly one outcome.
+        Check set-based outcome coverage for supplied attempts.
+        This does not count duplicates or verify anchored completeness.
         
         Returns:
             Dictionary with verification results
@@ -522,7 +524,7 @@ class SRPLogger:
     
     def export_evidence_pack(self, output_dir: str) -> str:
         """
-        Export the event chain as a regulatory-ready Evidence Pack.
+        Export the event chain as a PoC evidence bundle, not a compliance determination.
         
         Args:
             output_dir: Directory to create the evidence pack in
@@ -587,22 +589,31 @@ class SRPLogger:
                 "eventCount": len(self.events),
                 "computedAt": datetime.now(timezone.utc).isoformat(),
                 "anchorStatus": "NOT_ANCHORED",
-                "anchorNote": "External anchoring is optional in this PoC"
+                "anchorNote": "Not anchored by this PoC; VAP v1.2 requires external anchoring at all levels"
             }, f, indent=2)
         
         # Write verification instructions
         instructions = """# Evidence Pack Verification Guide
 
-## What This Pack Proves
+## Scope and implementation limits
 
-1. **Generation requests were received** (GEN_ATTEMPT events)
-2. **Harmful requests were refused** (GEN_DENY events)
-3. **The record is tamper-evident** (hash chain linkage)
-4. **Every request has an outcome** (completeness check)
+This pack contains reported attempts and refusal/generation decisions. It does
+not prove actual non-generation, safety, or legal/CAP/VAP conformance.
+Local checks cover only supplied records; pre-measurement drops are undetectable.
+Removing an uncommitted attempt/outcome pair can preserve outcome counts.
 
-## Quick Verification (< 2 minutes)
+Signatures are generated only when PyNaCl is available. No public key is exported;
+signature verification requires separately obtained, authenticated key material.
+The checks below do not verify signatures, recompute event hashes, authenticate
+anchors, or check duplicate outcomes. Manifest PASS labels are producer reports.
 
-### Step 1: Verify Hash Chain
+The legacy merkle_root.json is a digest of concatenated event-hash strings,
+not an RFC 6962 Merkle root or an external anchor. This pack is NOT_ANCHORED.
+Standalone --verify is not implemented. See the repository README for details.
+
+## Limited local checks (run from the pack directory)
+
+### Step 1: Check declared hash links (not hash recomputation)
 
 ```bash
 # Each event's previousHash must match the prior event's eventHash
@@ -614,11 +625,11 @@ prev = 'sha256:' + '0'*64
 for e in events:
     assert e['previousHash'] == prev, f'Chain broken at {e[\"eventId\"]}'
     prev = e['eventHash']
-print('✓ Hash chain verified')
+print('Declared hash links match; hashes and signatures not verified')
 "
 ```
 
-### Step 2: Verify Completeness
+### Step 2: Check attempt/outcome ID coverage (not multiplicity)
 
 ```bash
 # Every GEN_ATTEMPT must have a GEN or GEN_DENY
@@ -629,7 +640,7 @@ with open('chain/hash_chain.json') as f:
 attempts = {e['eventId'] for e in events if e['eventType'] == 'GEN_ATTEMPT'}
 outcomes = {e['attemptId'] for e in events if e['eventType'] in ['GEN', 'GEN_DENY']}
 assert attempts == outcomes, 'Completeness check failed'
-print('✓ Completeness verified')
+print('ID coverage matches; duplicates and anchors not verified')
 "
 ```
 
@@ -640,22 +651,19 @@ Open `statistics/refusal_stats.json` to see:
 - Breakdown by risk category
 - Chain integrity status
 
-## What This Proves to Regulators
+## Further verification required
 
-- ✓ Requests were logged before processing
-- ✓ Refusals have documented reasons
-- ✓ Records cannot be modified without detection
-- ✓ No requests were "hidden" from the log
+Independent assessment requires event-hash recomputation, signature verification
+against authenticated keys, terminal-outcome multiplicity checks, and verification
+of full declared batch scope against authenticated external commitments. An anchor
+must bind the relevant scope and records; publishing the legacy digest alone does
+not establish VAP v1.2 conformance. The PoC does not implement this workflow.
 
-## External Anchoring (Optional)
-
-For production deployments, the `merkle_root.json` can be anchored to:
-- Ethereum mainnet transaction
-- RFC 3161 Timestamp Authority
-- Other immutable public record
-
-This PoC demonstrates the cryptographic structure; external anchoring
-adds non-repudiation for long-term regulatory evidence.
+Canonical CAP v1.0 and the VAP v1.2 Draft 3 mapping are available at:
+https://github.com/veritaschain/cap-spec
+The mapping is a review draft with unresolved divergences, not a conformance
+declaration. VAP v1.2 requires external anchoring at all conformance levels.
+Conformance to a technical profile does not constitute legal compliance.
 
 ---
 

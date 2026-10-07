@@ -1,3 +1,5 @@
+> **Historical document — not the current canonical specification.** This draft predates released [CAP v1.0](https://github.com/veritaschain/cap-spec/blob/main/docs/CAP-Specification-v1.0.md) and [VAP v1.2](https://github.com/veritaschain/vap-spec/blob/main/spec/v1.2/VAP_Framework_Specification.md). Older base-version references and normative text below are retained for historical interpretation; they are not current conformance declarations. The [current README](../README.md) states implementation limitations and the published-but-unresolved CAP/VAP mapping status. Completeness claims are limited to recorded, anchored requests; pre-measurement drops and actual non-generation are not proven. No legal compliance follows from this PoC.
+
 # Content / Creative AI Profile (CAP)
 
 ## Technical Specification v0.2

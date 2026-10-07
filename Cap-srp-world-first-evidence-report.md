@@ -1,3 +1,5 @@
+> **Historical research record.** This report predates VSO's naming rule reserving “world's first” for VCP; its conclusions are not current VSO claims about CAP. It is not independent implementation validation, certification, or proof that harmful generation never occurred. See the [current README](README.md) and [canonical CAP disclosure](https://github.com/veritaschain/cap-spec#research-records) for current scope and status.
+
 ## Reading Guidance (Non-normative)
 
 This document provides a consolidated prior-art and landscape assessment for the **CAP-SRP (Safe Refusal Provenance)** framework.

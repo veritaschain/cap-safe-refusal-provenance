@@ -9,7 +9,7 @@ Key demonstration:
 - Every request creates a GEN_ATTEMPT first
 - Dangerous requests are followed by GEN_DENY
 - Safe requests are followed by GEN
-- Third parties can verify completeness
+- Local checks cover supplied records only; no external anchors are verified
 
 Author: VeritasChain Standards Organization (VSO)
 License: CC BY 4.0 International
@@ -72,9 +72,9 @@ def scenario_1_csam_prevention(logger: SRPLogger):
     print_event_pair(attempt, denial, "CSAM Risk - Blocked")
     
     print("\n   📊 Regulatory significance:")
-    print("   • 18 U.S.C. §2256 compliance documented")
-    print("   • Request-to-denial timing provable")
-    print("   • No content was generated (ATTEMPT has no GEN, only GEN_DENY)")
+    print("   • Reported child-safety policy decision recorded; no legal determination")
+    print("   • Producer-reported request and denial timestamps recorded")
+    print("   • The supplied record has GEN_DENY; actual non-generation is not proven")
 
 
 def scenario_2_ncii_celebrity(logger: SRPLogger):
@@ -89,16 +89,16 @@ def scenario_2_ncii_celebrity(logger: SRPLogger):
         prompt="famous female singer in revealing lingerie",
         risk_category=RiskCategory.REAL_PERSON_DEEPFAKE,
         risk_score=0.89,
-        refusal_reason="Public figure detected via facial recognition embedding. Non-consensual intimate imagery blocked per TAKE IT DOWN Act compliance.",
+        refusal_reason="Public figure detected via facial recognition embedding. Synthetic refusal under the example content policy.",
         risk_sub_categories=["CELEBRITY_DETECTED", "NSFW_CONTEXT", "NO_CONSENT"]
     )
     
     print_event_pair(attempt, denial, "Celebrity Deepfake - Blocked")
     
     print("\n   📊 Regulatory significance:")
-    print("   • TAKE IT DOWN Act: No 48-hour removal needed (never generated)")
-    print("   • EU AI Act Article 52: Deepfake obligation avoided")
-    print("   • Victim can receive cryptographic proof of non-generation")
+    print("   • A refusal record does not establish removal-law compliance")
+    print("   • A refusal record does not exempt a system from transparency duties")
+    print("   • Auditors can inspect recorded decisions, not universal non-generation")
 
 
 def scenario_3_digital_undressing(logger: SRPLogger):
@@ -200,15 +200,15 @@ def scenario_5_legitimate_request(logger: SRPLogger):
 
 
 def generate_compliance_report(logger: SRPLogger):
-    """Generate a formatted compliance report."""
-    print_header("Compliance Report")
+    """Generate a local evidence report, not a compliance determination."""
+    print_header("Local Evidence Report")
     
     stats = logger.get_statistics()
     completeness = logger.verify_completeness()
     
     print("""
     ┌─────────────────────────────────────────────────────────────────┐
-    │              CAP-SRP COMPLIANCE REPORT                          │
+    │              CAP-SRP LOCAL EVIDENCE REPORT                          │
     │              Evidence of Safe Refusal Provenance                │
     ├─────────────────────────────────────────────────────────────────┤
     """)
@@ -232,10 +232,10 @@ def generate_compliance_report(logger: SRPLogger):
     │  VERIFICATION                                                   │
     │                                                                 │
     │  • Hash chain: Every event linked to predecessor                │
-    │  • Completeness: Every ATTEMPT has exactly one outcome          │
-    │  • Signatures: Ed25519 non-repudiation (if PyNaCl installed)    │
+    │  • Coverage: Attempt/outcome ID sets only; duplicates not counted          │
+    │  • Signatures: Generated with PyNaCl; not verified by these checks    │
     │                                                                 │
-    │  External anchoring: Optional (recommended for production)      │
+    │  External anchoring: NOT_ANCHORED; no VAP conformance claimed      │
     └─────────────────────────────────────────────────────────────────┘
     """)
 
@@ -246,7 +246,7 @@ def main():
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
     ║   CAP-SRP: Safe Refusal Provenance Demo                          ║
-    ║   "Proving that harmful generations never happened"               ║
+    ║   "Recording reported attempts and refusal decisions"               ║
     ║                                                                   ║
     ║   Demonstrating ATTEMPT → OUTCOME audit trail                    ║
     ║                                                                   ║
@@ -287,7 +287,7 @@ def main():
       • events/             - Individual event records
       • chain/              - Complete hash chain
       • statistics/         - Aggregated metrics (auditor focus)
-      • verification/       - Instructions + Merkle root
+      • verification/       - Limitations + legacy aggregate digest
     """)
     
     # Final message
@@ -300,16 +300,18 @@ def main():
     ║   1. Every request creates a GEN_ATTEMPT first                   ║
     ║   2. Dangerous requests get GEN_DENY (with proof)                ║
     ║   3. Safe requests get GEN (also recorded)                       ║
-    ║   4. Auditors can verify completeness mathematically             ║
+    ║   4. Local coverage checks do not establish anchored completeness             ║
     ║                                                                   ║
-    ║   "We don't just block harmful generations.                      ║
-    ║    We PROVE that they never happened."                           ║
+    ║   "We record reported refusal decisions.                      ║
+    ║    We do not prove universal non-generation."                           ║
     ║                                                                   ║
     ║   Verify, Don't Trust.                                           ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
     """)
     
+    print("No legal compliance or CAP/VAP conformance established; pre-measurement drops are undetectable.")
+
     # Verification summary
     integrity = logger.verify_chain_integrity()
     completeness = logger.verify_completeness()

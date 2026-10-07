@@ -64,10 +64,10 @@ We appreciate responsible disclosure and will acknowledge security researchers i
 
 CAP-SRP is built on the following security principles:
 
-1. **Tamper Evidence**: Hash chains ensure any modification is detectable
+1. **Tamper Evidence**: Hash chains detect local inconsistency; independent commitments are needed to detect a producer rewriting an entire history
 2. **Non-Repudiation**: Ed25519 signatures bind events to issuers
-3. **Privacy by Design**: Only prompt hashes stored, never plaintext
-4. **Verifiability**: Third parties can independently verify integrity
+3. **Privacy by Design**: Prompt fields store hashes; hashes can remain linkable and metadata requires review
+4. **Verifiability**: Independent verification requires authenticated keys/commitments; standalone pack verification is not implemented
 
 ## Contact
 

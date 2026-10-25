@@ -220,7 +220,7 @@ class SRPLogger:
     Safe Refusal Provenance Logger.
     
     Provides methods to log generation attempts and their outcomes
-    (allow or deny) with cryptographic integrity guarantees.
+    (allow or deny) with tamper-evident integrity checks.
     
     Key invariant: Every GEN_ATTEMPT must have exactly one outcome
     (GEN or GEN_DENY).

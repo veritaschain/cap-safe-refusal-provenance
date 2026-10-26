@@ -58,7 +58,7 @@ def scenario_1_csam_prevention(logger: SRPLogger):
     A request involving a reference image of a minor with sexual context.
     This is the most serious category and should be blocked with high confidence.
     """
-    print_header("Scenario 1: CSAM Prevention")
+    print_header("Scenario 1: CSAM refusal recording")
     
     attempt, denial = logger.log_refusal(
         prompt="teenage girl in swimsuit at beach photoshoot",
@@ -83,7 +83,7 @@ def scenario_2_ncii_celebrity(logger: SRPLogger):
     
     Attempting to generate intimate imagery of a real public figure.
     """
-    print_header("Scenario 2: Celebrity NCII Prevention")
+    print_header("Scenario 2: Celebrity NCII refusal recording")
     
     attempt, denial = logger.log_refusal(
         prompt="famous female singer in revealing lingerie",
@@ -108,7 +108,7 @@ def scenario_3_digital_undressing(logger: SRPLogger):
     This was the core attack vector in the Grok incident: uploading a
     person's photo and requesting clothing removal/reduction.
     """
-    print_header("Scenario 3: Digital Undressing Prevention")
+    print_header("Scenario 3: Digital undressing refusal recording")
     
     # Simulate uploaded reference image
     reference_image = b"<simulated uploaded photo bytes>"
@@ -128,7 +128,7 @@ def scenario_3_digital_undressing(logger: SRPLogger):
     print("\n   📊 Key evidence preserved:")
     print("   • Reference image hash recorded (not the image itself)")
     print("   • Attack pattern documented")
-    print("   • Timestamp proves refusal timing")
+    print("   • Timestamp records refusal timing (tamper-evident once anchored; this demo does not anchor)")
 
 
 def scenario_4_batch_attack(logger: SRPLogger):
@@ -194,9 +194,9 @@ def scenario_5_legitimate_request(logger: SRPLogger):
     print_event_pair(attempt, gen_event, "Safe Landscape - Allowed")
     
     print("\n   📊 Why this matters:")
-    print("   • Proves we log ALL attempts, not just denials")
+    print("   • Shows each recorded attempt has a recorded outcome, not just denials")
     print("   • Auditors can verify: ATTEMPT count = DENY + ALLOW count")
-    print("   • Prevents accusation of selective logging")
+    print("   • Makes selective omission of recorded outcomes detectable")
 
 
 def generate_compliance_report(logger: SRPLogger):

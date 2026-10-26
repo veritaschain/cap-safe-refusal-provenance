@@ -128,7 +128,7 @@ def scenario_3_digital_undressing(logger: SRPLogger):
     print("\n   📊 Key evidence preserved:")
     print("   • Reference image hash recorded (not the image itself)")
     print("   • Attack pattern documented")
-    print("   • Timestamp records refusal timing (tamper-evident once anchored)")
+    print("   • Timestamp records refusal timing (tamper-evident once anchored; this demo does not anchor)")
 
 
 def scenario_4_batch_attack(logger: SRPLogger):

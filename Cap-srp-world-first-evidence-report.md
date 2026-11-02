@@ -1,10 +1,10 @@
-> **Historical research record.** This report predates VSO's naming rule reserving “world's first” for VCP; its conclusions are not current VSO claims about CAP. It is not independent implementation validation, certification, or proof that harmful generation never occurred. See the [current README](README.md) and [canonical CAP disclosure](https://github.com/veritaschain/cap-spec#research-records) for current scope and status.
+> **Historical first-party, AI-assisted research record — clarified 2026-11-02.** This report predates VSO's naming rule reserving “world's first” for VCP; its conclusions are not current VSO claims about CAP. The five AI tools were research aids used by the author, not five independent reviewers or validators. Agreement among their outputs does not establish novelty, freedom to operate, implementation validation, certification, or proof that harmful generation never occurred. The tables, source counts and proposed press statements below are retained historical assertions, not findings revalidated on this correction date. See the [current README](README.md) and [canonical CAP disclosure](https://github.com/veritaschain/cap-spec#research-records) for current scope and status.
 
 ## Reading Guidance (Non-normative)
 
-This document provides a consolidated prior-art and landscape assessment for the **CAP-SRP (Safe Refusal Provenance)** framework.
+This document retains a historical consolidated prior-art and landscape assessment for the **CAP-SRP (Safe Refusal Provenance)** framework.
 
-The primary purpose of this report is to evaluate the **novelty, scope, and defensibility** of CAP-SRP as an open specification for cryptographically verifiable AI refusal and non-generation evidence. It is intended for regulators, standards bodies, auditors, and technical stakeholders assessing post-incident accountability mechanisms for AI systems.
+The original report assessed the **novelty, scope, and defensibility** of CAP-SRP using AI-assisted research. It is retained for historical traceability, not as current substantiation for regulators, standards bodies, auditors or other readers. Recorded refusal decisions do not prove universal non-generation.
 
 - **Sections 1–5** focus on research methodology, architectural comparison, and differentiation from existing standards and implementations.  
 - **Sections 6–8** examine related academic work, provider practices, and standards gaps relevant to AI content moderation and refusal logging.  
@@ -26,18 +26,18 @@ Readers primarily interested in empirical context may proceed directly to **Appe
 **Document ID:** VSO-EVIDENCE-SRP-003  
 **Version:** 3.0 (Final Consolidated)  
 **Date:** 2026-01-10  
-**Classification:** Public  
+**Classification:** Public historical research record; not current substantiation<br>
 **Prepared by:** VeritasChain Standards Organization (VSO)  
-**Research Sources:** 5 independent AI research engines  
+**Research Tools:** 5 AI tools used in a first-party assessment; not independent validators<br>
 **Total Sources Analyzed:** 250+ academic, industry, patent, and regulatory sources
 
 ---
 
 ## Executive Summary
 
-### Consolidated Conclusion (5-Source Consensus)
+### Historical Tool-Output Summary (Not Independent Validation)
 
-All five independent AI research engines confirm CAP-SRP's "world's first" claims are defensible when appropriately qualified. While parallel projects (ArifOS, CIRIS, SPQR) emerged in late 2025, CAP-SRP is unique as an **open specification** for AI content moderation with **completeness verification** and **evidence pack export**. 
+The historical AI-assisted outputs characterized CAP-SRP's qualified "world's first" positioning as defensible and compared it with ArifOS, CIRIS and SPQR. That characterization is retained as a record of the author's research process. It is not independent validation, a current priority claim, or a finding revalidated by this editorial correction.
 
 **Key Finding:** "No competing implementation achieves similar functionality." (Research)
 
@@ -55,7 +55,7 @@ All five independent AI research engines confirm CAP-SRP's "world's first" claim
 
 ## 1. Research Methodology
 
-### 1.1 Five Independent Research Sources
+### 1.1 Five AI-Assisted Research Tools (Not Independent Reviewers)
 
 | Source | Scope | Key Finding |
 |--------|-------|-------------|
@@ -270,9 +270,9 @@ The combination appears **unpatented and potentially patentable**.
 
 ## 9. Conclusion & Recommended Positioning
 
-### 9.1 Primary Finding (5-Source Consensus)
+### 9.1 Historical Assertions from AI-Assisted Research
 
-CAP-SRP represents a **genuine advancement** in AI safety auditing. All five independent research engines confirm:
+The first-party assessment's AI-assisted outputs made the following assertions. They are retained historical claims, not independent validation or current VSO conclusions:
 
 1. **No competing implementation** achieves similar functionality
 2. **Completeness verification** is unique to CAP-SRP
@@ -280,7 +280,7 @@ CAP-SRP represents a **genuine advancement** in AI safety auditing. All five ind
 4. **Evidence pack export** standard is novel
 5. **C2PA gap** for negative proof is filled by CAP-SRP
 
-### 9.2 Recommended Press Language
+### 9.2 Historical Suggested Press Language (Not for Current Reuse)
 
 **Primary Statement:**
 > "CAP-SRP is the **world's first open specification** for cryptographically verifiable AI refusal provenance, providing mathematical proof that harmful content was never generated."
@@ -341,6 +341,7 @@ To ensure claim accuracy:
 | 1.0 | 2026-01-10 | Initial single-source report |
 | 2.0 | 2026-01-10 | Consolidated 4 sources |
 | 3.0 | 2026-01-10 | Final: Consolidated all 5 sources (Claude, GPT, Gemini, PPLX, GROK) |
+| 3.0 (editorial) | 2026-11-02 | Identify first-party AI-assisted provenance; remove independent-validation framing and label historical press language; no new prior-art or implementation validation |
 
 ---
 

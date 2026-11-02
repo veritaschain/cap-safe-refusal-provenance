@@ -16,7 +16,7 @@ This first-party, legacy PoC illustrates request/outcome logging and Evidence Pa
 - [CAP v1.0 / VAP v1.2 Draft 3 conformance mapping](https://github.com/veritaschain/cap-spec/blob/main/docs/conformance/CAP-v1.0-VAP-v1.2-Draft3-Conformance-Mapping.md) — **review draft**
 - [Minimal change proposal](https://github.com/veritaschain/cap-spec/blob/main/docs/conformance/CAP-VAP-v1.2-Minimal-Change-Proposal.md) — **unadopted**
 
-**Status checked 2026-10-08 JST:** the mapping is published for review, but identifies unresolved normative divergences. **CAP v1.0 conformance to VAP v1.2 has not been established.** Neither publication of the mapping nor this PoC establishes conformance or certification. CAP v1.0 remains the released CAP specification; the proposal does not amend it. This repository demonstrates selected SRP mechanisms and does not claim full CAP v1.0 or VAP v1.2 conformance.
+**Canonical document status rechecked 2026-11-02 UTC:** the mapping is published for review, but identifies unresolved normative divergences. **CAP v1.0 conformance to VAP v1.2 has not been established.** Neither publication of the mapping nor this PoC establishes conformance or certification. CAP v1.0 remains the released CAP specification; the proposal does not amend it. This repository demonstrates selected SRP mechanisms and does not claim full CAP v1.0 or VAP v1.2 conformance. This date records a check of the linked documents' stated status, not a new conformance assessment or implementation count.
 
 In particular, CAP v1.0 permits optional external anchoring at Bronze, whereas VAP v1.2 INT-006 requires it at every conformance level. Signed batch scope, continuity, policy binding and data-model requirements also remain unresolved. A local hash chain, Merkle root or passing PoC test is not a substitute for those requirements.
 
@@ -129,7 +129,7 @@ External anchoring is omitted in this PoC. This is an implementation limitation,
 
 - [CAP v1.0 canonical specification](https://github.com/veritaschain/cap-spec/blob/main/docs/CAP-Specification-v1.0.md) and [VAP v1.2 framework](https://github.com/veritaschain/vap-spec/blob/main/spec/v1.2/VAP_Framework_Specification.md) govern current reference terminology and scope.
 - [Local SRP extension v0.2](spec/CAP-SRP-Extension.md) and [local CAP v0.2](spec/CAP-Specification-v0_2.md) are historical drafts, not current canonical specifications. Their older versions, diagrams and requirements are retained as historical records.
-- [Prior-art report](Cap-srp-world-first-evidence-report.md) is historical research, not a current “world's first” claim, independent validation or proof of universal non-generation.
+- [Prior-art report](Cap-srp-world-first-evidence-report.md) is historical first-party, AI-assisted research. The 2026-11-02 editorial clarification identifies the five AI tools as research aids, not independent validators; their agreement is not a current “world's first” claim, independent validation or proof of universal non-generation.
 - [CAP-SRP dashboard/library](https://github.com/veritaschain/cap-srp) is a separate PoC with `GEN_ERROR` and additional checks; it also does not claim VAP v1.2 conformance.
 
 ## Repository guide
@@ -149,3 +149,7 @@ External anchoring is omitted in this PoC. This is an implementation limitation,
 - GitHub: https://github.com/veritaschain/cap-safe-refusal-provenance
 
 *Verify recorded decisions; do not infer unobserved behavior.*
+
+## License scope clarification — 2 November 2026
+
+Documentation remains CC BY 4.0. First-party code, scripts, code examples and schemas additionally offer [Apache-2.0](LICENSE-CODE); existing licenses and third-party notices remain in effect. See [LICENSE](LICENSE) for the scope and preserved prior terms. This editorial licensing note does not change protocol requirements or claim conformance.
